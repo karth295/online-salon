@@ -1,13 +1,31 @@
+//Fields:
+	//qId: the ID of the discussion point
+	//uId: the ID of the user whose position this is
+	//value: the left property of the slider
+	//text: the text the user has for this position
 Positions = new Meteor.Collection("pos");
+
+//Fields:
+	//_id: The ID of the discussion point
+	//issue: The text of the discussion point itself
 Issues = new Meteor.Collection("issues");
+
+//Fields:
+	//qId: The ID of the discussion point
+	//text: The URL submitted
 Evidence = new Meteor.Collection("evi");
+
+//Fields: 
+	//_id: The user's userId
+	//name: The user's name, currently any part of the email before the @ sign
+	//line: The line the user will appear on other screens
 Users = new Meteor.Collection("mah_users");
 
 if (Meteor.isClient) {
 
   var correct = "75px";
   
-  Handlebars.registerHelper('add', function(left, offset) {
+  /* Handlebars.registerHelper('add', function(left, offset) {
 	return left + offset;
   });
   
@@ -43,6 +61,19 @@ if (Meteor.isClient) {
     return Users.findOne({_id: uId}).line;
   });
 
+  Handlebars.registerHelper('findMyPos', function(question) {
+    return Positions.findOne({qId: question, uId: Meteor.userId()});
+  }); */
+
+  Template.myPos.rendered = function() {
+    var question = this.firstNode.classList[1].substring(2);
+    var me = Positions.findOne({qId: question, uId: Meteor.userId()});
+    console.log(question);
+    console.log(me);
+    this.find(".speech").style.left = me.value;
+    this.find("textarea").value = me.text;
+  }
+
   Template.slider.getHeight = function() {
     var count = 0;
     Users.find().forEach(function() {
@@ -52,6 +83,10 @@ if (Meteor.isClient) {
   }
 
   Template.slider.correctionFactor = function() {
+    return correct;
+  }
+
+  Template.myPos.correctionFactor = function() {
     return correct;
   }
 
@@ -148,15 +183,6 @@ if (Meteor.isClient) {
     }
   });
   
-  /* Template.slider.events({
-    'click .editable .notyping' : function(e) {
-      e.target.style.display = "none";
-      var box = e.target.parentNode.querySelector("textarea");
-      box.style.display = "";
-      box.focus();
-    }
-  }); */
-
   var currTime = null;
   
   Template.slider.events({
@@ -224,27 +250,6 @@ if (Meteor.isClient) {
   }
 
   function getBg(left) {
-    /* var width = 489;
-    var g = Math.max(parseInt(left / width * 255), 0);
-    var r = 255 - g;
-    var b = g < 128 ? g*2 : r*2;
-    var rgb = [Math.round(r*1.5), Math.round(g*1.5), 0];
-    return "rgb(" + rgb.join(",") + ")"; */
-
-    //var width = 489;
-    //var wheel = Math.round(left / width * 120);
-    
-    /* var hello = left / 490;
-    var wheel = 60;
-    if(hello < .33) {
-      wheel = 0;
-    } else if(hello > .67) {
-      wheel = 120;
-    }
-
-    var sat = Math.abs(hello * 2 - 1) * 40 + 50 + "%";
-
-    //return "hsla(" + [wheel, sat, "60%", "1"].join(", ") + ")"; */
     return "white";
   }
 
@@ -305,7 +310,7 @@ if (Meteor.isClient) {
   }
 }
 
-Meteor.methods({
+/* Meteor.methods({
   "logoutWithId" : function(userId) {
     Issues.update({editor: userId}, {$unset: {editor: ""}});
   },
@@ -341,4 +346,4 @@ if (Meteor.isServer) {
     });
     return user;
   });
-}
+} */

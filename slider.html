@@ -142,16 +142,7 @@
 
 <template name="slider">
 <div style="width: 73%; float: right; margin: 0% 1%; height: {{getHeight}}">
-<div class="positions" style="height: 180px; margin-left: {{correctionFactor}};">
-	{{#each $find _id}}
-		{{#if $eq currentUser._id uId}}
-			<div class="speech editable" style="left: {{value}}">
-				<div class="white"><strong>I say:</strong></div>
-				<textarea class="words" placeholder="Type a position">{{text}}</textarea>
-		{{/if}}
-			</div>
-	{{/each}}
-</div>
+{{> myPos}}
 
 <span class="oppose">Oppose</span>
 	<div class="slider">
@@ -159,17 +150,30 @@
 			{{#if $eq currentUser._id uId}}
 				<span class="handle draggable" style="left: {{value}}">Me</span>
 			{{else}}
-			<div>
-				<span class="line" style="height: {{$getLine uId}}em; border-right: 1px dashed {{$getBg value}}; left: {{$add value 10}}px;"></span>
-				<span class="handle nameonly {{$concat 'ID' uId}}" style="left: {{$add value 10}}px; margin-top: {{$getLine uId}}em;">{{$getName uId}}</span>
-				<div class="nobubble" style="left: {{$add value 10}}px; margin-top: {{$getLine uId}}em; background-color: {{$getBg value}}; display: none; ">
-					<div class="white"><strong>{{$getName uId}} says:</strong></div>
-                                	<textarea class="words" readonly>{{text}}</textarea>
-				</p>
-			</div>
+				{{> otherBubble}}
 			{{/if}}
 		{{/each}}
 	</div>
 <span class="support">Support</span>
+</div>
+</template>
+
+<template name="myPos">
+<div class="positions {{$concat 'ID' _id}}" style="height: 180px; margin-left: {{correctionFactor}};">
+	<div class="speech editable">
+               	<div class="white"><strong>I say:</strong></div>
+       	        <textarea class="words" placeholder="Type a position"></textarea>
+       	</div>
+</div>
+</template>
+
+<template name="otherBubble">
+<div>
+        <span class="line" style="height: {{$getLine uId}}em; border-right: 1px dashed {{$getBg value}}; left: {{$add value 10}}px;"></span>
+        <span class="handle nameonly {{$concat 'ID' uId}}" style="left: {{$add value 10}}px; margin-top: {{$getLine uId}}em;">{{$getName uId}}</span>
+        <div class="nobubble" style="left: {{$add value 10}}px; margin-top: {{$getLine uId}}em; background-color: {{$getBg value}}; display: none; ">
+        <div class="white"><strong>{{$getName uId}} says:</strong></div>
+	<textarea class="words" readonly>{{text}}</textarea>
+	</p>
 </div>
 </template>
