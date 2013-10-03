@@ -1,0 +1,181 @@
+* {
+	cursor: default;
+}
+
+.expand, .contract {
+	color: blue;
+	text-decoration: underline;
+}
+
+body {
+	background-color: #FFFFDD;
+}
+
+.textarea {
+	position: absolute;
+}
+
+.line {
+	width: 0px;
+	margin-top: 10px;
+	position: absolute;
+}
+
+.slider {
+	border: 1px solid gray;
+	border-radius: 10px;
+	height: 10px;
+	margin: 10px;
+	width: 500px;
+	float: left;
+	position: relative;
+
+	background-image: -webkit-gradient(linear, left top, right top, color-stop(0.1, #FF0000), color-stop(0.9, #00FF00));
+	background-image: -moz-linear-gradient(left center, #ff0000 10%, #ff00ff 90%);
+}
+
+.draggable {
+	/* width: 40px; */
+	height: 20px;
+	text-align: left;
+	font-weight: normal;
+	color: #555555;
+	overflow: hidden;
+	
+	left: 235px;
+	z-index: 3;
+	
+	margin-top: -.3em;
+	font-size: 10pt;
+}
+
+.handle {
+	border: 1px solid #d3d3d3;
+        background: #e6e6e6;
+        position: absolute;
+	height: 15px;
+	/* width: 15px; */
+	vertical-align: bottom;
+}
+
+.circle {
+	border-radius: 50%;
+	width: 10px;
+	vertical-align: bottom;
+}
+
+.handle:hover, .circle:hover {
+	border: 1px solid #999999;
+	background: #dadada;
+	font-weight: normal;
+	color: #212121;
+}
+
+.draggable:hover {
+	cursor: pointer;
+}
+
+.hidden {
+	display: none;
+}
+
+.slider, span {
+	float: left;
+}
+
+pre {
+	overflow-y: auto;
+	height: inherit;
+	width: inherit;
+	
+	padding: 0px;
+	margin: 0px;
+}
+
+.nobubble {
+	z-index: 10;
+}
+
+.nameonly {
+	padding: 2px;
+}
+
+.speech, .nobubble 
+{
+position: absolute;
+width: 200px;
+height: 120px;
+padding: 0px;
+background: #FFFFFF;
+-webkit-border-radius: 10px;
+-moz-border-radius: 10px;
+border-radius: 10px;
+border: #000000 solid 5px;
+}
+
+.speech:after 
+{
+content: '';
+position: absolute;
+border-style: solid;
+border-width: 37px 24px 0;
+border-color: #FFFFFF transparent;
+display: block;
+width: 0;
+z-index: 1;
+bottom: -37px;
+left: 49px;
+}
+
+.speech:before 
+{
+content: '';
+position: absolute;
+border-style: solid;
+border-width: 41px 28px 0;
+border-color: #000000 transparent;
+display: block;
+width: 0;
+z-index: 0;
+bottom: -46px;
+left: 45px;
+}
+
+.words {
+	width: 100%;
+	height: 100px;
+	border: none;
+    overflow: auto;
+    outline: none;
+    padding: 0px;
+
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+}
+
+.white {
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+	color: white;
+	background-color: black;
+	height: 20px;
+}
+
+.positions {
+	height: 10em;
+	clear: right;
+	position: relative;
+}
+.support, .oppose {
+	font-size: 20pt;
+	width: 130px;
+}
+
+#textarea {
+	position: absolute;
+	resize: none;
+}
+
+fieldset {
+	border: none;
+}
