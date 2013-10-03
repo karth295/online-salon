@@ -43,11 +43,6 @@ if (Meteor.isClient) {
     return Users.findOne({_id: uId}).line;
   });
 
-  Handlebars.registerHelper('$getString', function(user, question) {
-    console.log(user + "" + question + "__" + Positions.findOne({uId: user, qId: question}).change);
-    return user + "" + question + "__" + Positions.findOne({uId: user, qId: question}).change;
-  });
-
   Template.slider.getHeight = function() {
     var count = 0;
     Users.find().forEach(function() {
@@ -296,7 +291,7 @@ if (Meteor.isClient) {
       Issues.insert({issue: text.value});
       var oId = Issues.findOne({issue: text.value})._id;
       Users.find().forEach(function(user) {
-        Positions.insert({uId: user._id, qId: oId, value: 245 + "px", text: "", change: 0});
+        Positions.insert({uId: user._id, qId: oId, value: 245 + "px", text: ""});
       });
       text.value = "";
       e.target.style.display = "none";
@@ -342,7 +337,7 @@ if (Meteor.isServer) {
     var number = 2 * (Meteor.call("getUserCount") + 1); 
     Users.insert({_id: user._id, name: myName, line: number});
     Issues.find().forEach(function(el) {
-      Positions.insert({uId: user._id, qId: el._id, value: 245 + "px", text: "", change: 0});
+      Positions.insert({uId: user._id, qId: el._id, value: 245 + "px", text: ""});
     });
     return user;
   });
