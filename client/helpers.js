@@ -36,6 +36,10 @@ Handlebars.registerHelper('$getLine', function(uId) {
   return Users.findOne({_id: uId}).line;
 });
 
+Handlebars.registerHelper('$getLineNotification', function(uId) {
+  return Users.findOne({_id: uId}).line - .6;
+});
+
 Handlebars.registerHelper('findMyPos', function(question) {
   return Positions.findOne({qId: question, uId: Meteor.userId()});
 });

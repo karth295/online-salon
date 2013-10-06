@@ -24,52 +24,26 @@ Users = new Meteor.Collection("mah_users");
 if (Meteor.isClient) {
 
   var correct = "75px";
-  
-  /* Handlebars.registerHelper('add', function(left, offset) {
-	return left + offset;
-  });
-  
-  Handlebars.registerHelper('$eq', function(a, b) {
-      return a == b; 
-  });
-  
-  Handlebars.registerHelper('$find', function(question) {
-    return Positions.find({qId: question});
-  });
- 
-  Handlebars.registerHelper('$evi', function(question) {
-    return Evidence.find({qId: question});
-  });
 
-  Handlebars.registerHelper('$concat', function(first, second) {
-    return first + "" + second; //In case they are both numbers
-  });
+  document.click = function(e) {
+    console.log("Log");
+  }
 
-  Handlebars.registerHelper('$add', function(first, second) {
-    return parseInt(first) + parseInt(second);
-  });
+  Template.otherBubble.rendered = function() {
+    console.log(this.find(".notification"));
+    this.find(".notification").style.display = "";
+  }
 
-  Handlebars.registerHelper('$getBg', function(left) {
-    return getBg(parseInt(left) + 10);
+  Template.otherBubble.events({
+    'mouseover .handle' : function(e) {
+      e.target.style.backgroundColor = "";
+      e.target.parentNode.querySelector(".notification").style.display = "none";
+    }
   });
-
-  Handlebars.registerHelper('$getName', function(uId) {
-    return Users.findOne({_id: uId}).name;
-  });
-
-  Handlebars.registerHelper('$getLine', function(uId) {
-    return Users.findOne({_id: uId}).line;
-  });
-
-  Handlebars.registerHelper('findMyPos', function(question) {
-    return Positions.findOne({qId: question, uId: Meteor.userId()});
-  }); */
 
   Template.myPos.rendered = function() {
     var question = this.firstNode.classList[1].substring(2);
     var me = Positions.findOne({qId: question, uId: Meteor.userId()});
-    console.log(question);
-    console.log(me);
     this.find(".speech").style.left = me.value;
     this.find("textarea").value = me.text;
   }
@@ -310,40 +284,3 @@ if (Meteor.isClient) {
   }
 }
 
-/* Meteor.methods({
-  "logoutWithId" : function(userId) {
-    Issues.update({editor: userId}, {$unset: {editor: ""}});
-  },
-
-  "updateValue" : function(userId, question, newLeft) {
-    Positions.update({uId: userId, qId: question}, {$set: {value: newLeft}});
-  },
-
-  "updateText" : function(userId, question, newText) {
-    Positions.update({uId: userId, qId: question}, {$set: {text: newText}});
-  },
-
-  "getUserCount" : function() {
-    var count = 0;
-    Users.find().forEach(function() {
-      count++;
-    });
-    return count;
-  }
-});
-
-if (Meteor.isServer) {
-  Meteor.startup(function () {
-    
-  });
-
-  Accounts.onCreateUser(function(e, user) {
-    var myName = user.emails ? user.emails[0].address.split("@")[0] : user._id;
-    var number = 2 * (Meteor.call("getUserCount") + 1); 
-    Users.insert({_id: user._id, name: myName, line: number});
-    Issues.find().forEach(function(el) {
-      Positions.insert({uId: user._id, qId: el._id, value: 245 + "px", text: ""});
-    });
-    return user;
-  });
-} */

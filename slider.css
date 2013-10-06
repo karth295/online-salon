@@ -2,6 +2,33 @@
 	cursor: default;
 }
 
+.notification {
+	position: absolute;
+	width: 20px;
+	height: 15px;
+	padding: 0px;
+	background: #FF0000;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+
+	color: white;
+	text-align: center;
+}
+
+.notification:after {
+	content: '';
+	position: absolute;
+	border-style: solid;
+	border-width: 8px 3px 0;
+	border-color: #FF0000 transparent;
+	display: block;
+	width: 0;
+	z-index: 1;
+	bottom: -8px;
+	left: 6px;
+}
+
 .expand, .contract {
 	color: blue;
 	text-decoration: underline;

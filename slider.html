@@ -23,6 +23,7 @@
                         {{#unless $eq editor currentUser._id}}
                                 <h2>{{issue}}</h2>
                         {{/unless}}
+
                         {{#if editor}}
                                 {{#if $eq editor currentUser._id}}
                                         <textarea>{{issue}}</textarea>
@@ -33,6 +34,7 @@
                         {{else}}
                                 <button class="edit">Edit</button>
                         {{/if}}
+
                         {{> evidence}}
                         {{> slider}}
                         <hr style="clear: both;"/>
@@ -172,8 +174,11 @@
         <span class="line" style="height: {{$getLine uId}}em; border-right: 1px dashed {{$getBg value}}; left: {{$add value 10}}px;"></span>
         <span class="handle nameonly {{$concat 'ID' uId}}" style="left: {{$add value 10}}px; margin-top: {{$getLine uId}}em;">{{$getName uId}}</span>
         <div class="nobubble" style="left: {{$add value 10}}px; margin-top: {{$getLine uId}}em; background-color: {{$getBg value}}; display: none; ">
-        <div class="white"><strong>{{$getName uId}} says:</strong></div>
-	<textarea class="words" readonly>{{text}}</textarea>
-	</p>
+        	<div class="white"><strong>{{$getName uId}} says:</strong></div>
+		<textarea class="words" readonly>{{text}}</textarea>
+	</div>
+	<span class="notification" style="left: {{$add value 5}}px; margin-top: {{$getLineNotification uId}}em;">
+		<span style="font-size: 8pt;">new</span>
+	</span>
 </div>
 </template>
