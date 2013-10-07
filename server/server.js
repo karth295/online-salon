@@ -1,6 +1,6 @@
 Meteor.methods({
   "logoutWithId" : function(userId) {
-    Issues.update({editor: userId}, {$unset: {editor: ""}});
+  
   },
 
   "updateValue" : function(userId, question, newLeft) {
@@ -17,6 +17,23 @@ Meteor.methods({
       count++;
     });
     return count;
+  },
+
+  "insertIssue" : function(myId, text) {
+    var myName = Users.findOne({_id: myId}).name;
+    Issues.insert({issue: text, creator: myId, creatorName: myName, timestamp: new Date().getTime()});
+    var oId = Issues.findOne({issue: text, creator: myId})._id;
+    Users.find().forEach(function(user) {
+      Positions.insert({uId: user._id, qId: oId, value: 245 + "px", text: ""});
+    });
+  },
+
+  "editIssue" : function(question, text) {
+    Issues.update({_id: question}, {$set: {issue: text}});
+  },
+
+  "editRequest" : function(question, text) {
+    Issues.update({_id: question}, {$push: {requests: text}});
   }
 });
 

@@ -8,6 +8,9 @@ Positions = new Meteor.Collection("pos");
 //Fields:
 	//_id: The ID of the discussion point
 	//issue: The text of the discussion point itself
+	//creator: userId of whomever created this point
+	//creatorName: The name of whomever created this point
+	//timestamp: When this point was created
 Issues = new Meteor.Collection("issues");
 
 //Fields:
@@ -25,12 +28,11 @@ if (Meteor.isClient) {
 
   var correct = "75px";
 
-  document.click = function(e) {
-    console.log("Log");
+  document.onclick = function(e) {
+    closeAllBubbles();
   }
 
   Template.otherBubble.rendered = function() {
-    console.log(this.find(".notification"));
     this.find(".notification").style.display = "";
   }
 
@@ -43,7 +45,7 @@ if (Meteor.isClient) {
 
   Template.myPos.rendered = function() {
     var question = this.firstNode.classList[1].substring(2);
-    var me = Positions.findOne({qId: question, uId: Meteor.userId()});
+    var me = Positions.findOne({qId: question, uId: Meteor.userId()}) || {value: "245px", text: ""};
     this.find(".speech").style.left = me.value;
     this.find("textarea").value = me.text;
   }
@@ -228,19 +230,10 @@ if (Meteor.isClient) {
   }
 
   Template.issues.issues = function() {
-    return Issues.find();
+    return Issues.find({}, {timestamp: -1});
   }
   
   Template.issues.events({
-    'click .edit' : function(e) {
-      Issues.update({_id: e.target.parentNode.id.substring(2)}, {$set: {editor: Meteor.userId()}});
-    },
-    
-    'click .done' : function(e) {
-      var text = document.querySelector("#" + e.target.parentNode.id + " textarea").value;
-      Issues.update({_id: e.target.parentNode.id.substring(2)}, {$set: {issue: text}, $unset: {editor: ""}});
-    },
-
     'keypress .evidence textarea' : function(e) {
       if(e.keyCode == 13) {
         var url = e.target.value;
@@ -266,12 +259,9 @@ if (Meteor.isClient) {
       document.getElementById("addButton").style.display = "";
       var text = document.getElementById("addBox");
       text.style.display = "none";
-    
-      Issues.insert({issue: text.value});
-      var oId = Issues.findOne({issue: text.value})._id;
-      Users.find().forEach(function(user) {
-        Positions.insert({uId: user._id, qId: oId, value: 245 + "px", text: ""});
-      });
+      
+      Meteor.call("insertIssue", Meteor.userId(), text.value);
+
       text.value = "";
       e.target.style.display = "none";
     }
@@ -283,4 +273,3 @@ if (Meteor.isClient) {
     Meteor.call("logoutWithId", Meteor.userId());
   }
 }
-

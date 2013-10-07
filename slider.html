@@ -20,20 +20,7 @@
 <template name="issues">
 	{{#each issues}}
                 <div id="{{$concat 'ID' _id}}">
-                        {{#unless $eq editor currentUser._id}}
-                                <h2>{{issue}}</h2>
-                        {{/unless}}
-
-                        {{#if editor}}
-                                {{#if $eq editor currentUser._id}}
-                                        <textarea>{{issue}}</textarea>
-                                        <button class="done">Done</button>
-                                {{else}}
-                                        <button disabled>Somebody is currently editing...</button>
-                                {{/if}}
-                        {{else}}
-                                <button class="edit">Edit</button>
-                        {{/if}}
+			{{> pointTitle}}
 
                         {{> evidence}}
                         {{> slider}}
@@ -46,6 +33,22 @@
         <button id="addButton">Add a point</button>
         <input id="addBox" style="display: none"  type="text" placeholder="Create Point" />
         <button id="insertButton" style="display: none">Done</button>
+</template>
+
+<template name="pointTitle">
+	{{#unless $amEditing _id}}
+		<h2>{{issue}}</h2>
+	{{/unless}}
+
+	<textarea class="amEdit" style="display: none;">{{issue}}</textarea>
+	{{#if $eq currentUser._id creator}}
+		<button class="done" style="display: none;">Save</button>
+		<button class="edit">Edit</button>
+	{{else}}
+		<button class="done" style="display: none;">Send Request</button>
+		<button class="edit">Request {{creatorName}} to edit</button>
+	{{/if}}
+
 </template>
 
 <template name="top">

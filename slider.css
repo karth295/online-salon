@@ -11,7 +11,8 @@
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
-
+	
+	z-index: 10;
 	color: white;
 	text-align: center;
 }
@@ -46,6 +47,7 @@ body {
 	width: 0px;
 	margin-top: 10px;
 	position: absolute;
+	z-index: -1;
 }
 
 .slider {
@@ -85,13 +87,7 @@ body {
 	vertical-align: bottom;
 }
 
-.circle {
-	border-radius: 50%;
-	width: 10px;
-	vertical-align: bottom;
-}
-
-.handle:hover, .circle:hover {
+.handle:hover {
 	border: 1px solid #999999;
 	background: #dadada;
 	font-weight: normal;
