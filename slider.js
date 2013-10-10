@@ -28,9 +28,9 @@ if (Meteor.isClient) {
 
   var correct = "75px";
 
-  document.onclick = function(e) {
+  /* document.onclick = function(e) {
     closeAllBubbles();
-  }
+  } */
 
   Template.otherBubble.rendered = function() {
     this.find(".notification").style.display = "";
@@ -230,7 +230,7 @@ if (Meteor.isClient) {
   }
 
   Template.issues.issues = function() {
-    return Issues.find({}, {timestamp: -1});
+    return Issues.find({}, {sort: {timestamp: -1}});
   }
   
   Template.issues.events({
