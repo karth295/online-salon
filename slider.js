@@ -159,26 +159,7 @@ if (Meteor.isClient) {
     }
   });
   
-  var currTime = null;
-  
   Template.slider.events({
-    'blur .editable .words' : function(e) {
-      update_text(e);
-    }
-  });
-
-  Template.slider.events({
-    'mouseover .circle' : function(e) {
-      var find = e.target.classList[e.target.classList.length - 1];
-      var pos = e.target.parentNode.parentNode.querySelector(".positions ." + find);
-      pos.style.display = "";
-    },
-
-    'mouseout .circle' : function(e) {
-      var find = e.target.classList[e.target.classList.length - 1];
-      e.target.parentNode.parentNode.querySelector(".positions ." + find).style.display = "none";
-    },
-
     'mouseover .nameonly' : function(e) {
       e.target.style.display = "none";
 
@@ -195,25 +176,8 @@ if (Meteor.isClient) {
         e.target.parentNode.querySelector(".line").style.borderWidth = "1px";
       }
     },
-
-    'keyup .words' : function(e) {
-      if(currTime)
-        clearTimeout(currTime);
-      currTime = setTimeout(update_text, 3000, e);
-    }
   });
-
-  function update_text(e) {
-    console.log("Update");
-    var qId = e.target.parentNode.parentNode.parentNode.parentNode.id;
-    qId = qId.substring(2);
-    if(currTime)
-      clearTimeout(currTime);
-    currTime = null;
-    Meteor.call("updateText", Meteor.userId(), qId, e.target.value);
-    e.target.focus();
-  }
-
+  
   function closeAllBubbles() {
     var bubbs = document.querySelectorAll(".nobubble");
     for(var i = 0; i < bubbs.length; i++) {

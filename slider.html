@@ -14,9 +14,6 @@
         {{#if currentUser}}
                 {{> issues}}
                 <hr style="clear: both;"/>
-	{{else}}
-		{{> issues}}
-                <hr style="clear: both;"/>
         {{/if}}
 </template>
 
@@ -169,7 +166,10 @@
 <template name="myPos">
 <div class="positions {{$concat 'ID' _id}}" style="height: 180px; margin-left: {{correctionFactor}};">
 	<div class="speech editable">
-               	<div class="white"><strong>I say:</strong></div>
+               	<div class="white">
+			<strong>I say:</strong>
+			<button class="save" style="display: none">Save</button>
+		</div>
        	        <textarea class="words" placeholder="Type a position"></textarea>
        	</div>
 </div>
