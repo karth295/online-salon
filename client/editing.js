@@ -19,5 +19,23 @@ Template.pointTitle.events({
     } else {
       Meteor.call("editRequest", question, text);
     }
+  },
+
+  'click .requests' : function(e) {
+    var parent = e.target.parentNode;
+    parent.querySelector(".hide_requests").style.display = "";
+    parent.querySelector(".requests_bubble").style.display = "";
+    e.target.style.display = "none";
+  },
+
+  'click .hide_requests' : function(e) {
+    var parent = e.target.parentNode;
+    parent.querySelector(".requests").style.display = "";
+    parent.querySelector(".requests_bubble").style.display = "none";
+    e.target.style.display = "none";
   }
+});
+
+Handlebars.registerHelper("$getRequests", function(question) {
+  return Issues.findOne({_id: question}).requests;
 });

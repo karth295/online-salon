@@ -19,7 +19,7 @@
 
 <template name="issues">
 	{{#each issues}}
-                <div id="{{$concat 'ID' _id}}">
+                <div id="{{$concat 'ID' _id}}" style="position: relative">
 			{{> pointTitle}}
 
                         {{> evidence}}
@@ -44,6 +44,18 @@
 	{{#if $eq currentUser._id creator}}
 		<button class="done" style="display: none;">Save</button>
 		<button class="edit">Edit</button>
+		<button class="requests">View Edit Requests</button>
+		<button class="hide_requests" style="display: none">Hide Edit Requests</button>
+		<div class="requests_bubble" style="display: none">
+			{{#each $getRequests _id}}
+				<div>
+					{{request}}
+					<img src="approve.png" class="approve" title="Approve this edit request"/>
+					<img src="reject.png" class="reject" title="Ignore this edit request"/>
+				</div>
+				<hr />
+			{{/each}}
+		<div>
 	{{else}}
 		<button class="done" style="display: none;">Send Request</button>
 		<button class="edit">Request {{creatorName}} to edit</button>

@@ -33,7 +33,8 @@ Meteor.methods({
   },
 
   "editRequest" : function(question, text) {
-    Issues.update({_id: question}, {$push: {requests: text}});
+    var request_object = {timestamp: new Date().getTime(), request: text}
+    Issues.update({_id: question}, {$push: {requests: request_object}});
   }
 });
 

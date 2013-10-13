@@ -2,6 +2,59 @@
 	cursor: default;
 }
 
+.requests_bubble img {
+  float: right;
+  padding right: 2px;
+}
+
+.requests_bubble img:hover {
+  cursor: pointer;
+}
+
+.requests_bubble 
+{
+position: absolute;
+top: 100px;
+width: 270px;
+height: 300px;
+padding: 0px;
+background: #FFFFFF;
+-webkit-border-radius: 10px;
+-moz-border-radius: 10px;
+border-radius: 10px;
+border: #7F7F7F solid 2px;
+
+z-index: 11;
+}
+
+.requests_bubble:after 
+{
+content: '';
+position: absolute;
+border-style: solid;
+border-width: 0 15px 20px;
+border-color: #FFFFFF transparent;
+display: block;
+width: 0;
+z-index: 1;
+top: -20px;
+left: 111px;
+}
+
+.requests_bubble:before 
+{
+content: '';
+position: absolute;
+border-style: solid;
+border-width: 0 16px 21px;
+border-color: #7F7F7F transparent;
+display: block;
+width: 0;
+z-index: 0;
+top: -23px;
+left: 110px;
+}
+
 .notification {
 	position: absolute;
 	width: 20px;
