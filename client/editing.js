@@ -14,10 +14,12 @@ Template.pointTitle.events({
     p.querySelector(".amEdit").style.display = "none";
     e.target.style.display = "none";
     var issue = Issues.findOne({_id: question});
+
+    var bool = false;
     if(issue.creator == Meteor.userId()) {
-      Meteor.call("editIssue", question, text);
+      Meteor.call("editIssue", question, text, success_pointUpdate);
     } else {
-      Meteor.call("editRequest", question, text);
+      Meteor.call("editRequest", question, text, success_requestEntered);
     }
   },
 
@@ -36,6 +38,41 @@ Template.pointTitle.events({
   }
 });
 
-Handlebars.registerHelper("$getRequests", function(question) {
-  return Issues.findOne({_id: question}).requests;
+Template.viewRequests.events({
+  'click .approve' : function(e) {
+    var qId = e.target.parentNode.parentNode.parentNode.id.substring(2);
+    var text = e.target.parentNode.textContent;
+    Meteor.call("editIssue", qId, text);
+    Meteor.call("deleteRequest", e.target.parentNode.id.substring(2), success_pointUpdate);
+  },
+
+  'click .reject' : function(e) {
+    var qId = e.target.parentNode.parentNode.parentNode.id.substring(2);
+    var text = e.target.parentNode.textContent;
+    Meteor.call("deleteRequest", e.target.parentNode.id.substring(2), success_pointUpdate);
+  }  
 });
+
+Handlebars.registerHelper("$getRequests", function(question) {
+  return Requests.find({qId: question});
+});
+
+function success_pointUpdate(err, bool) {
+  if(bool == 1) {
+    toastr.success("Discussion point updated");
+  } else if(bool == 0) {
+    //toastr.warning("No change");
+  } else {
+    toastr.error("Discussion point not updated :(");
+  }
+}
+
+function success_requestEntered(err, bool) {
+  if(bool == 1) {
+    toastr.success("Request sent");
+  } else if(bool == 0) {
+    toastr.warning("Request already exists");
+  } else {
+    toastr.error("Request not sent :(");
+  }
+}

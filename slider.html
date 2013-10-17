@@ -46,21 +46,27 @@
 		<button class="edit">Edit</button>
 		<button class="requests">View Edit Requests</button>
 		<button class="hide_requests" style="display: none">Hide Edit Requests</button>
-		<div class="requests_bubble" style="display: none">
-			{{#each $getRequests _id}}
-				<div>
-					{{request}}
-					<img src="approve.png" class="approve" title="Approve this edit request"/>
-					<img src="reject.png" class="reject" title="Ignore this edit request"/>
-				</div>
-				<hr />
-			{{/each}}
-		<div>
+		{{> viewRequests}}
 	{{else}}
 		<button class="done" style="display: none;">Send Request</button>
 		<button class="edit">Request {{creatorName}} to edit</button>
 	{{/if}}
 
+</template>
+
+<template name="viewRequests">
+	<div class="requests_bubble" style="padding: 5px; display: none">
+	{{#each $getRequests _id}}
+		<div id="{{$concat 'ID' _id}}">
+			{{text}}
+			<img src="approve.png" class="approve" title="Approve this edit request"/>
+			<img src="reject.png" class="reject" title="Ignore this edit request"/>
+		</div>
+		<hr />
+	{{else}}
+		No requests yet.
+	{{/each}}
+	<div>
 </template>
 
 <template name="top">

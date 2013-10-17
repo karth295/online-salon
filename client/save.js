@@ -24,10 +24,15 @@ Template.myPos.events({
 });
 
 function update_text(text, qId) {
-  Meteor.call("updateText", Meteor.userId(), qId, text.value);
+  Meteor.call("updateText", Meteor.userId(), qId, text.value, function(err, bool) {
+    if(bool == 1) {
+      toastr.success("Position saved successfully");
+    } else if(bool == 0) {
+       //toastr.warning("No change");
+    } else {
+       toastr.error("Position not updated");
+    }
+  });
   text.blur();
-  
-  //Sucess
-  x.other("Hello");
   text.parentNode.querySelector(".save").style.display = "none";
 }

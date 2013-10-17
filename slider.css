@@ -2,6 +2,10 @@
 	cursor: default;
 }
 
+.approve, .reject {
+	margin: 0px 5px;
+}
+
 .requests_bubble img {
   float: right;
   padding right: 2px;

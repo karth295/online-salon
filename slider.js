@@ -24,6 +24,14 @@ Evidence = new Meteor.Collection("evi");
 	//line: The line the user will appear on other screens
 Users = new Meteor.Collection("mah_users");
 
+//Fields:
+	//_id: Request's id
+	//qId: Issue's _id
+	//creatorId: creator's userId
+	//text: The request
+	//timestamp: date
+Requests = new Meteor.Collection("requests");
+
 if (Meteor.isClient) {
 
   var correct = "75px";
@@ -116,9 +124,7 @@ if (Meteor.isClient) {
 		document.onmousemove = null;
 		document.onselectstart = null;
 		dragElement.ondragstart = null;
-		dragElement = null;
-		
-		//document.querySelector("#" + qId + " .editable textarea").focus();
+		dragElement = null;	
 	}
   }
 

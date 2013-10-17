@@ -1,6 +1,6 @@
 Meteor.methods({
   "logoutWithId" : function(userId) {
-  
+    
   },
 
   "updateValue" : function(userId, question, newLeft) {
@@ -8,7 +8,11 @@ Meteor.methods({
   },
 
   "updateText" : function(userId, question, newText) {
+    if(Positions.findOne({uId: userId, qId: question, text: newText})) {
+      return 0;
+    }
     Positions.update({uId: userId, qId: question}, {$set: {text: newText}});
+    return 1;
   },
 
   "getUserCount" : function() {
@@ -20,21 +24,42 @@ Meteor.methods({
   },
 
   "insertIssue" : function(myId, text) {
+    text = text.trim();
     var myName = Users.findOne({_id: myId}).name;
     Issues.insert({issue: text, creator: myId, creatorName: myName, timestamp: new Date().getTime()});
     var oId = Issues.findOne({issue: text, creator: myId})._id;
     Users.find().forEach(function(user) {
       Positions.insert({uId: user._id, qId: oId, value: 245 + "px", text: ""});
     });
+    return 1;
   },
 
   "editIssue" : function(question, text) {
+    text = text.trim();
+    if(Issues.findOne({_id: question, issue: text})) {
+      return 0;
+    }
     Issues.update({_id: question}, {$set: {issue: text}});
+    return 1;
   },
 
-  "editRequest" : function(question, text) {
-    var request_object = {timestamp: new Date().getTime(), request: text}
-    Issues.update({_id: question}, {$push: {requests: request_object}});
+  "editRequest" : function(question, requestedText, creator) {
+    requestedText = requestedText.trim();
+    if(Requests.findOne({qId: question, text: requestedText})) {
+      return 0;
+    }
+    Requests.insert({
+      qId: question,
+      creatorId: creator,
+      text: requestedText,
+      timestamp: new Date().getTime()
+    });
+    return 1;
+  },
+
+  "deleteRequest" : function(requestId) {
+    Requests.remove({_id: requestId});
+    return 1;
   }
 });
 
