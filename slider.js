@@ -34,6 +34,22 @@ Requests = new Meteor.Collection("requests");
 
 if (Meteor.isClient) {
 
+  me = {
+         id: ""
+       }
+  
+  Meteor.autorun(function() {
+    if(Meteor.user()) {
+      me.id = Meteor.userId();
+      Users.update({_id: me.id}, {$set: {online: true}});
+      Meteor.call("addUserDefaultPositions", me.id);
+    } else {
+      if(me.id) {
+        Users.update({_id: me.id}, {$set: {online: false}});
+      }
+    }
+  });
+
   var correct = "75px";
 
   /* document.onclick = function(e) {
@@ -53,9 +69,9 @@ if (Meteor.isClient) {
 
   Template.myPos.rendered = function() {
     var question = this.firstNode.classList[1].substring(2);
-    var me = Positions.findOne({qId: question, uId: Meteor.userId()}) || {value: "245px", text: ""};
-    this.find(".speech").style.left = me.value;
-    this.find("textarea").value = me.text;
+    var mePos = Positions.findOne({qId: question, uId: me.id}) || {value: "245px", text: ""};
+    this.find(".speech").style.left = mePos.value;
+    this.find("textarea").value = mePos.text;
   }
 
   Template.slider.getHeight = function() {
@@ -72,77 +88,6 @@ if (Meteor.isClient) {
 
   Template.myPos.correctionFactor = function() {
     return correct;
-  }
-
-  Template.slider.rendered = function() {
-    document.onmousedown = down;
-    document.onmouseup = up;
-
-    var windows = document.querySelectorAll("p.speech");
-    for(var i = 0; i < windows.length; i++) {
-      windows[i].style.backgroundColor = getBg(parseInt(window.getComputedStyle(windows[i]).left) + 10);
-    }
-  }
-
-  var startX = 0;            // mouse starting positions
-  var startY = 0;
-  var offsetX = 0;           // current element offset
-  var dragElement;           // needs to be passed from OnMouseDown to OnMouseMove
-  var oldZIndex = 0;         // we temporarily increase the z-index during drag
-
-  function down(e) {
-	var e = e ? e : window.event;
-	var target = e.target ? e.target : e.srcElement;
-	
-	if(e.target.className.indexOf("draggable") != -1 && (e.button == 0 || e.button == 1)) {
-		startX = e.clientX;
-		offsetX = parseInt(window.getComputedStyle(target).left);
-		
-		target.style.zIndex = 2;	//Move over other handles
-		dragElement = target;
-		
-		document.onmousemove = move;
-		//document.body.focus();
-		
-		
-		// prevent text selection in IE
-        document.onselectstart = function () { return false; }
-        // prevent IE from trying to drag an image
-        target.ondragstart = function() { return false; }
-        
-        // prevent text selection (except IE)
-        return false;
-	}
-  }
-
-  function up() {
-	if(dragElement != null) {	//We are dragging something
-		var qId = dragElement.parentNode.parentNode.parentNode.id.substring(2);
-		Meteor.call("updateValue", Meteor.userId(), qId, dragElement.style.left);
-		dragElement.style.zIndex = 1;
-		
-		document.onmousemove = null;
-		document.onselectstart = null;
-		dragElement.ondragstart = null;
-		dragElement = null;	
-	}
-  }
-
-  function move(e) {
-	var e = e ? e : window.event;
-	var calculated = offsetX + e.clientX - startX;
-	calculated = Math.max(calculated, -10);
-	calculated = Math.min(calculated, parseInt(window.getComputedStyle(document.querySelector(".slider")).width) - 10);
-	var qId = dragElement.parentNode.parentNode.parentNode.id;
-	dragElement.style.left = calculated + "px";
-	var edit = document.querySelector("#" + qId + " .editable");
-	edit.style.left = calculated + "px";
-        edit.style.backgroundColor = getBg(calculated + 10);
-        
-        var div = dragElement.parentNode.parentNode;
-
-	div.querySelector(".support").style.fontSize = 20 + (calculated + 10 - 250) / 25 + "pt";
-	div.querySelector(".oppose").style.fontSize = 20 - (calculated + 10 - 250) / 25 + "pt";
   }
 
   Template.welcome_message.events({
@@ -165,26 +110,7 @@ if (Meteor.isClient) {
     }
   });
   
-  Template.slider.events({
-    'mouseover .nameonly' : function(e) {
-      e.target.style.display = "none";
-
-      closeAllBubbles();
-
-      e.target.parentNode.querySelector(".nobubble").style.display = "";
-      e.target.parentNode.querySelector(".line").style.borderWidth = "5px";
-    },
-
-    'mouseout .nobubble' : function(e) {
-      if(e.target.classList.contains("nobubble")) {
-        e.target.style.display = "none";
-        e.target.parentNode.querySelector(".nameonly").style.display = "";
-        e.target.parentNode.querySelector(".line").style.borderWidth = "1px";
-      }
-    },
-  });
-  
-  function closeAllBubbles() {
+  closeAllBubbles = function() {
     var bubbs = document.querySelectorAll(".nobubble");
     for(var i = 0; i < bubbs.length; i++) {
       if(bubbs[i].style.display != "none") {
@@ -230,16 +156,16 @@ if (Meteor.isClient) {
       var text = document.getElementById("addBox");
       text.style.display = "none";
       
-      Meteor.call("insertIssue", Meteor.userId(), text.value);
+      Meteor.call("insertIssue", me.id, text.value);
 
       text.value = "";
       e.target.style.display = "none";
     }
   });
 
-  window.onbeforeunload = logout;
-  Meteor.logout = logout;
+  /* window.onbeforeunload = logout;
+  Meteor.logout(logout);
   function logout() {
-    Meteor.call("logoutWithId", Meteor.userId());
-  }
+    Meteor.call("logoutWithId", me.id);
+  } */
 }

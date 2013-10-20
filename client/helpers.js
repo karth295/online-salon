@@ -1,3 +1,7 @@
+SUCCESS = 1;
+NO_CHANGE = 0;
+FAILURE = -1;
+
 var correct = "75px";
 
 Handlebars.registerHelper('add', function(left, offset) {

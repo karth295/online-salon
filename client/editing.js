@@ -15,7 +15,7 @@ Template.pointTitle.events({
     e.target.style.display = "none";
     var issue = Issues.findOne({_id: question});
 
-    var bool = false;
+    var exit_status = false;
     if(issue.creator == Meteor.userId()) {
       Meteor.call("editIssue", question, text, success_pointUpdate);
     } else {
@@ -57,20 +57,20 @@ Handlebars.registerHelper("$getRequests", function(question) {
   return Requests.find({qId: question});
 });
 
-function success_pointUpdate(err, bool) {
-  if(bool == 1) {
+function success_pointUpdate(err, exit_status) {
+  if(exit_status == SUCCESS) {
     toastr.success("Discussion point updated");
-  } else if(bool == 0) {
+  } else if(exit_status == NO_CHANGE) {
     //toastr.warning("No change");
   } else {
     toastr.error("Discussion point not updated :(");
   }
 }
 
-function success_requestEntered(err, bool) {
-  if(bool == 1) {
+function success_requestEntered(err, exit_status) {
+  if(exit_status == SUCCESS) {
     toastr.success("Request sent");
-  } else if(bool == 0) {
+  } else if(exit_status == NO_CHANGE) {
     toastr.warning("Request already exists");
   } else {
     toastr.error("Request not sent :(");
