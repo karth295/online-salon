@@ -7,7 +7,7 @@ Template.myPos.events({
 
   'keypress .editable .words' : function(e) {
     var text = e.target;
-    if(e.charCode == 13) {
+    if(e.charCode == 13 && !e.shiftKey) {
       e.preventDefault();
       var qId = text.parentNode.parentNode.classList[1].substring(2);
       update_text(text, qId);
@@ -24,15 +24,19 @@ Template.myPos.events({
 });
 
 function update_text(text, qId) {
-  Meteor.call("updateText", Meteor.userId(), qId, text.value, function(err, exit_status) {
-    if(exit_status == 1) {
-      toastr.success("Position saved successfully");
-    } else if(exit_status == 0) {
-       //toastr.warning("No change");
-    } else {
-       toastr.error("Position not updated");
-    }
-  });
-  text.blur();
-  text.parentNode.querySelector(".save").style.display = "none";
+  if(!Meteor.user()) {
+    askToLogin("You must login to save positions"); 
+  } else {
+    Meteor.call("updateText", Meteor.userId(), qId, text.value, function(err, exit_status) {
+      if(exit_status == 1) {
+        toastr.success("Position saved successfully");
+      } else if(exit_status == 0) {
+         //toastr.warning("No change");
+      } else {
+         toastr.error("Position not updated");
+      }
+    });
+    text.blur();
+    text.parentNode.querySelector(".save").style.display = "none";
+  }
 }

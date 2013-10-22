@@ -23,19 +23,16 @@ Template.pointTitle.events({
     }
   },
 
-  'click .requests' : function(e) {
+  'mouseover .requests' : function(e) {
     var parent = e.target.parentNode;
     parent.querySelector(".hide_requests").style.display = "";
     parent.querySelector(".requests_bubble").style.display = "";
     e.target.style.display = "none";
   },
 
-  'click .hide_requests' : function(e) {
-    var parent = e.target.parentNode;
-    parent.querySelector(".requests").style.display = "";
-    parent.querySelector(".requests_bubble").style.display = "none";
-    e.target.style.display = "none";
-  }
+  'click .hide_requests' : hideRequests,
+
+  'mouseout .requests_bubble' : hideRequests,
 });
 
 Template.viewRequests.events({
@@ -49,7 +46,7 @@ Template.viewRequests.events({
   'click .reject' : function(e) {
     var qId = e.target.parentNode.parentNode.parentNode.id.substring(2);
     var text = e.target.parentNode.textContent;
-    Meteor.call("deleteRequest", e.target.parentNode.id.substring(2), success_pointUpdate);
+    Meteor.call("deleteRequest", e.target.parentNode.id.substring(2));
   }  
 });
 
@@ -75,4 +72,12 @@ function success_requestEntered(err, exit_status) {
   } else {
     toastr.error("Request not sent :(");
   }
+}
+
+function hideRequests(e) {
+    var parent = e.target.parentNode;
+    parent.querySelector(".requests").style.display = "";
+    parent.querySelector(".requests_bubble").style.display = "none";
+    parent.querySelector(".hide_requests").style.display = "none";
+    e.target.style.display = "none";
 }

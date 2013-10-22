@@ -1,4 +1,8 @@
 Meteor.methods({
+  "insertUser" : function(user) {
+    Accounts.createUser(user);
+  },
+  
   "logoutWithId" : function(userId) {
     Users.update({_id: userId}, {online: false});
   },
@@ -25,13 +29,16 @@ Meteor.methods({
 
   "insertIssue" : function(myId, text) {
     text = text.trim();
-    var myName = Users.findOne({_id: myId}).name;
-    Issues.insert({issue: text, creator: myId, creatorName: myName, timestamp: new Date().getTime()});
-    var oId = Issues.findOne({issue: text, creator: myId})._id;
-    Users.find({online: true}).forEach(function(user) {
-      Positions.insert({uId: user._id, qId: oId, value: 245 + "px", text: ""});
-    });
-    return 1;
+    if(text != "") {
+      var myName = Users.findOne({_id: myId}).name;
+      Issues.insert({issue: text, creator: myId, creatorName: myName, timestamp: new Date().getTime()});
+      var oId = Issues.findOne({issue: text, creator: myId})._id;
+      Users.find().forEach(function(user) {
+        Positions.insert({uId: user._id, qId: oId, value: 245 + "px", text: ""});
+      });
+      return 1;
+    }
+    return 0;
   },
 
   "editIssue" : function(question, text) {
@@ -45,7 +52,7 @@ Meteor.methods({
 
   "editRequest" : function(question, requestedText, creator) {
     requestedText = requestedText.trim();
-    if(Requests.findOne({qId: question, text: requestedText}) || Issues.findOne({id: question, text: requestedText})) {
+    if(Requests.findOne({qId: question, text: requestedText}) || Issues.findOne({_id: question, issue: requestedText})) {
       return 0;
     }
     Requests.insert({
@@ -76,6 +83,6 @@ Accounts.onCreateUser(function(e, user) {
     var myName = user.emails ? user.emails[0].address.split("@")[0] : user._id;
     var number = 2 * (Meteor.call("getUserCount") + 1);
     Users.insert({_id: user._id, name: myName, line: number, online: true});
-    //Meteor.call("addUserDefaultPositions", user._id);
+    Meteor.call("addUserDefaultPositions", user._id);
     return user;
 });

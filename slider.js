@@ -32,19 +32,16 @@ Users = new Meteor.Collection("mah_users");
 	//timestamp: date
 Requests = new Meteor.Collection("requests");
 
+me = {}
+
 if (Meteor.isClient) {
 
-  me = {
-         id: ""
-       }
-  
-  Meteor.autorun(function() {
+  Deps.autorun(function() {
     if(Meteor.user()) {
       me.id = Meteor.userId();
-      Users.update({_id: me.id}, {$set: {online: true}});
-      Meteor.call("addUserDefaultPositions", me.id);
+      Users.update({_id: Meteor.userId()}, {$set: {online: true}});
     } else {
-      if(me.id) {
+      if(Meteor.userId()) {
         Users.update({_id: me.id}, {$set: {online: false}});
       }
     }
@@ -52,9 +49,9 @@ if (Meteor.isClient) {
 
   var correct = "75px";
 
-  /* document.onclick = function(e) {
+  document.onclick = function(e) {
     closeAllBubbles();
-  } */
+  }
 
   Template.otherBubble.rendered = function() {
     this.find(".notification").style.display = "";
@@ -69,7 +66,7 @@ if (Meteor.isClient) {
 
   Template.myPos.rendered = function() {
     var question = this.firstNode.classList[1].substring(2);
-    var mePos = Positions.findOne({qId: question, uId: me.id}) || {value: "245px", text: ""};
+    var mePos = Positions.findOne({qId: question, uId: Meteor.userId()}) || {value: "245px", text: ""};
     this.find(".speech").style.left = mePos.value;
     this.find("textarea").value = mePos.text;
   }
@@ -126,7 +123,7 @@ if (Meteor.isClient) {
   }
 
   Template.issues.issues = function() {
-    return Issues.find({}, {sort: {timestamp: -1}});
+    return Issues.find({}, {sort: {timestamp: 1}});
   }
   
   Template.issues.events({
@@ -155,17 +152,25 @@ if (Meteor.isClient) {
       document.getElementById("addButton").style.display = "";
       var text = document.getElementById("addBox");
       text.style.display = "none";
-      
-      Meteor.call("insertIssue", me.id, text.value);
+      if(!Meteor.userId()) {
+        askToLogin("You must login to create questions");
+      }
+      Meteor.call("insertIssue", Meteor.userId(), text.value, checkEntered);
 
       text.value = "";
       e.target.style.display = "none";
     }
   });
 
+  function checkEntered(err, exit_status) {
+    if(exit_status != SUCCESS) {
+      toastr.error("Point not added: no text entered");
+    }
+  }
+  
   /* window.onbeforeunload = logout;
   Meteor.logout(logout);
   function logout() {
-    Meteor.call("logoutWithId", me.id);
+    Meteor.call("logoutWithId", Meteor.userId());
   } */
 }

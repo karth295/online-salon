@@ -2,6 +2,26 @@
 	cursor: default;
 }
 
+.no_link {
+	color: blue;
+	text-decoration: underline;
+}
+
+.no_link:hover {
+	cursor: pointer;
+}
+
+#content {
+  border: 1px solid black;
+  padding: 5px;
+  background-color: white;
+}
+
+span.handle.notOnline {
+  background-color: #F0F0F0;
+  color: #D6D6D6; 
+}
+
 .approve, .reject {
 	margin: 0px 5px;
 }
@@ -18,7 +38,7 @@
 .requests_bubble 
 {
 position: absolute;
-top: 100px;
+top: 120px;
 width: 270px;
 height: 300px;
 padding: 0px;
@@ -93,7 +113,7 @@ left: 110px;
 }
 
 body {
-	background-color: #FFFFDD;
+	background-color: #FFFFDD; 
 }
 
 .textarea {

@@ -10,21 +10,19 @@
 </body>
 
 <template name="controller">
+	<div id="content" style="width: 1200px; margin: auto">
         {{> top}}
-	{{#if currentUser}}
-                {{> issues}}
-                <hr style="clear: both;"/>
-	{{/if}}
+        {{> issues}}
+	</div>
 </template>
 
 <template name="issues">
 	{{#each issues}}
-                <div id="{{$concat 'ID' _id}}" style="position: relative">
+                <div id="{{$concat 'ID' _id}}" style="clear: both; position: relative; background-color: #FFFFCC; border-radius: 20px; border: 1px solid #c4c4c4; padding: 10px; margin-top: 10px">
 			{{> pointTitle}}
 
                         {{> evidence}}
                         {{> slider}}
-                        <hr style="clear: both;"/>
                 </div>
 
         {{else}}
@@ -40,16 +38,18 @@
 		<h2>{{issue}}</h2>
 	{{/unless}}
 
-	<textarea class="amEdit" style="display: none;">{{issue}}</textarea>
-	{{#if $eq currentUser._id creator}}
-		<button class="done" style="display: none;">Save</button>
-		<button class="edit">Edit</button>
-		<button class="requests">View Edit Requests</button>
-		<button class="hide_requests" style="display: none">Hide Edit Requests</button>
-		{{> viewRequests}}
-	{{else}}
+	{{#if currentUser}}
+		<textarea class="amEdit" style="display: none;">{{issue}}</textarea>
+		{{#if $eq currentUser._id creator}}
+			<button class="done" style="display: none;">Save</button>
+			<button class="edit">Edit</button>
+			<button class="requests">View Edit Requests</button>
+			<button class="hide_requests" style="display: none">Hide Edit Requests</button>
+			{{> viewRequests}}
+		{{else}}
 		<button class="done" style="display: none;">Send Request</button>
 		<button class="edit">Request {{creatorName}} to edit</button>
+		{{/if}}
 	{{/if}}
 
 </template>
@@ -71,13 +71,17 @@
 
 <template name="top">
 	{{> welcome_message}}
-        <div style="float: right;">
-              {{loginButtons align="right"}}
-        </div>
         <h1>This is the topic</h1>
-        {{#unless currentUser}}
-                <h2>Log in to create and view positions</h2>
-        {{/unless}}
+	<div style="float: right;">
+        {{#if currentUser}}
+		<span class="no_link" title="You are logged in!">{{$getName currentUser._id}}</span>	
+	{{else}}
+			<h2 id="login">Log in to create and view positions</h2>
+			<h3>Who are you:</h3>
+			Username: <input id="login_name" type="text" /><br />
+			<!-- Password: <input id="login_psswd" type="password" /><br /> -->
+        {{/if}}
+	</div>
 </template> 
 
 <template name="welcome_message">
@@ -152,7 +156,7 @@
 </template>
 
 <template name="evidence">
-<div class="evidence" style="float: right; width: 19%; margin: 0% 5% 0% 0%;">
+<div class="evidence" style="float: right; width: 19%; margin: 0% 5% 0% 0%; display: none;">
 	<h3>Relevant Resources</h3>
 	<div style="width: 100%; height: 200px; border: 1px solid gray; background-color: white; overflow: auto;">
 		{{#each $evi _id}}
@@ -164,7 +168,8 @@
 </template>
 
 <template name="slider">
-<div style="width: 73%; float: right; margin: 0% 1%; height: {{getHeight}}">
+<div style="width: 73%; <!--float: right; --> margin: 0% 1%; height: {{getHeight}}">
+
 {{> myPos}}
 
 <span class="oppose">Oppose</span>
@@ -196,8 +201,8 @@
 <template name="otherBubble">
 <div>
         <span class="line" style="height: {{$getLine uId}}em; border-right: 1px dashed {{$getBg value}}; left: {{$add value 10}}px;"></span>
-        <span class="handle nameonly {{$concat 'ID' uId}}" style="left: {{$add value 10}}px; margin-top: {{$getLine uId}}em;">{{$getName uId}}</span>
-        <div class="nobubble" style="left: {{$add value 10}}px; margin-top: {{$getLine uId}}em; background-color: {{$getBg value}}; display: none; ">
+        <span class="handle nameonly {{$concat 'ID' uId}} {{#unless $online uId}}notOnline{{/unless}}" style="left: {{$add value 10}}px; margin-top: {{$getLine uId}}em;">{{$getName uId}}</span>
+        <div class="nobubble" style="left: {{$add value 10}}px; margin-top: {{$getLine uId}}em; display: none; ">
         	<div class="white"><strong>{{$getName uId}} says:</strong></div>
 		<textarea class="words" readonly>{{text}}</textarea>
 	</div>

@@ -4,6 +4,10 @@ FAILURE = -1;
 
 var correct = "75px";
 
+Handlebars.registerHelper('$online', function(uId) {
+  return Users.findOne({_id: uId}).online;
+});
+
 Handlebars.registerHelper('add', function(left, offset) {
   return left + offset;
 });
@@ -28,8 +32,8 @@ Handlebars.registerHelper('$add', function(first, second) {
   return parseInt(first) + parseInt(second);
 });
 
-Handlebars.registerHelper('$getBg', function(left) {
-  return getBg(parseInt(left) + 10);
+Handlebars.registerHelper('$getBg', function() {
+  return "black";
 });
 
 Handlebars.registerHelper('$getName', function(uId) {
@@ -37,11 +41,12 @@ Handlebars.registerHelper('$getName', function(uId) {
 });
 
 Handlebars.registerHelper('$getLine', function(uId) {
-  return Users.findOne({_id: uId}).line;
+  return getLine(uId);
 });
 
 Handlebars.registerHelper('$getLineNotification', function(uId) {
-  return Users.findOne({_id: uId}).line - .6;
+  var name = getLine(uId);
+  return name ? name - .6 : name;
 });
 
 Handlebars.registerHelper('findMyPos', function(question) {
@@ -50,4 +55,8 @@ Handlebars.registerHelper('findMyPos', function(question) {
 
 function getBg(left) {
   return "white";
+}
+
+function getLine(uId) {
+  return Users.findOne({_id: uId}) ? Users.findOne({_id: uId}).line : "";
 }

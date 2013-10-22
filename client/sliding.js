@@ -1,19 +1,20 @@
 /* support = {
-	size: "100px",
+	size: "20px",
 	color: "black"
 }
 
 oppose = {
-	size: "245px",
+	size: "20px",
 	color: "black"
 }
 
 Session.set("support", support);
 Session.set("oppose", oppose);
 
-Template.slider.support = function() { return Session.get("support"); }
-Template.slider.oppose = function() { return Session.get("oppose"); }
-*/
+Deps.autorun(function() {
+  Template.slider.support = Session.get("support"); 
+  Template.slider.oppose = Session.get("oppose");
+}); */
 
 Template.slider.rendered = function() {
   document.onmousedown = down;
@@ -83,6 +84,13 @@ function move(e) {
   div.querySelector(".support").style.fontSize = 20 + (calculated + 10 - 250) / 25 + "pt";
   div.querySelector(".oppose").style.fontSize = 20 - (calculated + 10 - 250) / 25 + "pt";
 }
+
+/* function recalcSupportOpposeSize(calc) {
+  support.size = 20 + calc / 25 + "pt";
+  oppose.size = 20 - calc / 25 + "pt";
+  Session.set("support", support);
+  Session.set("oppose", oppose);
+} */
 
 Template.slider.events({
  'mouseover .nameonly' : function(e) {
