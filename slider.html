@@ -72,15 +72,17 @@
 <template name="top">
 	{{> welcome_message}}
         <h1>This is the topic</h1>
-	<div style="float: right;">
         {{#if currentUser}}
+	<div style="float: right;">
 		<span class="no_link" title="You are logged in!">{{$getName currentUser._id}}</span>	
 	{{else}}
-			<h2 id="login">Log in to create and view positions</h2>
-			<h3>Who are you:</h3>
-			Username: <input id="login_name" type="text" /><br />
-			<!-- Password: <input id="login_psswd" type="password" /><br /> -->
-        {{/if}}
+	<div>
+		<h2 id="login_banner">Log in to create and view positions</h2>
+		<h3>Who are you:</h3>
+		Username: <input id="login_name" type="text" /><br />
+		<!-- Password: <input id="login_psswd" type="password" /><br /> -->
+        	<button id="login">Get started</button>
+	{{/if}}
 	</div>
 </template> 
 

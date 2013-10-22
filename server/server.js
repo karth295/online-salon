@@ -29,6 +29,9 @@ Meteor.methods({
 
   "insertIssue" : function(myId, text) {
     text = text.trim();
+    if(!Users.findOne({_id: myId})) {
+      return NOT_LOGGED_IN;
+    }
     if(text != "") {
       var myName = Users.findOne({_id: myId}).name;
       Issues.insert({issue: text, creator: myId, creatorName: myName, timestamp: new Date().getTime()});
@@ -36,24 +39,24 @@ Meteor.methods({
       Users.find().forEach(function(user) {
         Positions.insert({uId: user._id, qId: oId, value: 245 + "px", text: ""});
       });
-      return 1;
+      return SUCCESS;
     }
-    return 0;
+    return NO_CHANGE;
   },
 
   "editIssue" : function(question, text) {
     text = text.trim();
     if(Issues.findOne({_id: question, issue: text})) {
-      return 0;
+      return NO_CHANGE;
     }
     Issues.update({_id: question}, {$set: {issue: text}});
-    return 1;
+    return SUCCESS;
   },
 
   "editRequest" : function(question, requestedText, creator) {
     requestedText = requestedText.trim();
     if(Requests.findOne({qId: question, text: requestedText}) || Issues.findOne({_id: question, issue: requestedText})) {
-      return 0;
+      return NO_CHANGE;
     }
     Requests.insert({
       qId: question,
@@ -61,12 +64,12 @@ Meteor.methods({
       text: requestedText,
       timestamp: new Date().getTime()
     });
-    return 1;
+    return SUCCESS;
   },
 
   "deleteRequest" : function(requestId) {
     Requests.remove({_id: requestId});
-    return 1;
+    return SUCCESS;
   },
 
   

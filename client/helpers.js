@@ -1,7 +1,3 @@
-SUCCESS = 1;
-NO_CHANGE = 0;
-FAILURE = -1;
-
 var correct = "75px";
 
 Handlebars.registerHelper('$online', function(uId) {

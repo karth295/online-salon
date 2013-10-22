@@ -2,6 +2,23 @@
 	cursor: default;
 }
 
+@keyframes myfirst
+{
+  from {background: #00CCFF;}
+  to {background: white;}
+}
+
+@-webkit-keyframes myfirst /* Safari and Chrome */
+{
+  from {background: #0099CC;}
+  to {background: white;}
+}
+
+.animateBlue {
+  animation: myfirst 2s;
+  -webkit-animation: myfirst 2s; /* Safari and Chrome */
+}
+
 .no_link {
 	color: blue;
 	text-decoration: underline;

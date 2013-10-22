@@ -32,6 +32,10 @@ Users = new Meteor.Collection("mah_users");
 	//timestamp: date
 Requests = new Meteor.Collection("requests");
 
+SUCCESS = 1;
+NO_CHANGE = 0;
+NOT_LOGGED_IN = -1;
+
 me = {}
 
 if (Meteor.isClient) {
@@ -160,9 +164,6 @@ if (Meteor.isClient) {
       document.getElementById("addButton").style.display = "";
       var text = document.getElementById("addBox");
       text.style.display = "none";
-      if(!Meteor.userId()) {
-        askToLogin("You must login to create questions");
-      }
       Meteor.call("insertIssue", Meteor.userId(), text.value, checkEntered);
 
       text.value = "";
@@ -171,7 +172,9 @@ if (Meteor.isClient) {
   });
 
   function checkEntered(err, exit_status) {
-    if(exit_status != SUCCESS) {
+    if(exit_status == NOT_LOGGED_IN) {   
+      askToLogin("You must login to add a discussion point");
+    } else if(exit_status != SUCCESS) {
       toastr.error("Point not added: no text entered");
     }
   }
