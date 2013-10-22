@@ -39,13 +39,21 @@ if (Meteor.isClient) {
   Deps.autorun(function() {
     if(Meteor.user()) {
       me.id = Meteor.userId();
-      Users.update({_id: Meteor.userId()}, {$set: {online: true}});
+      setOnline(true);
     } else {
-      if(Meteor.userId()) {
-        Users.update({_id: me.id}, {$set: {online: false}});
-      }
+      setOnline(false);
     }
   });
+
+  window.onbeforeunload = function() {
+    setOnline(false);
+  }
+
+  function setOnline(bool) {
+    if(me.id) {
+      Users.update({_id: me.id}, {$set: {online: bool}});
+    }
+  }
 
   var correct = "75px";
 
